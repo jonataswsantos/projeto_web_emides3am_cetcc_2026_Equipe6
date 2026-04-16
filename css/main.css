@@ -1,0 +1,36 @@
+main {
+  background: #296fb0;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+.hero-info {
+  margin-left: 80px;
+  align-content: center;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.hero-info h1 {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+}
+
+.btn-hero {
+  display: inline-block;
+  margin-top: 30px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 4px;
+  background-image: linear-gradient(to top, #05902c, #119e36);
+}
+
+.hero-img img {
+  width: 900px;
+  height: 400px;
+}

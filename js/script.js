@@ -2,7 +2,7 @@ let produtosCadastrados = []
 
 const calcularImposto = (tipoProduto) => {
     const tipo = Number(tipoProduto)
-    switch (tipoProduto) {
+    switch (tipo) {
         case 1:
             return 0
         case 2:
@@ -20,62 +20,39 @@ const calcularImposto = (tipoProduto) => {
 
 const removerProduto = (idProduto) => {
     produtosCadastrados = produtosCadastrados.filter(
-        (produto) => produto.id !== idProduto,
+        (produto) => produto.id !== idProduto
     )
     renderizarProdutos()
 }
 
 const renderizarProdutos = () => {
-    const containerVitrine = document.getElementById('lista-produtos')
+    // Aponta para a div pai exata que você criou no HTML
+    const containerVitrine = document.querySelector('.exibir-produtos')
     containerVitrine.innerHTML = ''
 
     produtosCadastrados.forEach((produto) => {
-        const { id, nome, caracteristicas, valorUnitario, unidade, tipo } =
-            produto
+        const { id, nome, caracteristicas, valorUnitario, quantidade, tipo } = produto
 
+        // Cálculos
+        const impostoPercentual = calcularImposto(tipo)
+        const valorImpostoUnitario = valorUnitario * impostoPercentual
+        const valorTotalUnitario = valorUnitario + valorImpostoUnitario
+        const valorFinalTotal = valorTotalUnitario * quantidade
+
+        // Criando o card usando as suas classes CSS originais
         const cardProduto = document.createElement('div')
-        cardProduto.classList.add('card-produto')
+        cardProduto.classList.add('produto-simulado')
 
         cardProduto.innerHTML = `
-            <h3>${nome}</h3>
+            <h2>${nome}</h2>
             <p><small>${caracteristicas}</small></p>
-            <p>Preço Base: R$ ${valorUnitario.toFixed(2)} / ${unidade}</p>
-            
-            <label>
-                Quantidade: 
-                <input type="number" class="input-qtd" value="1" min="1">
-            </label>
-            
-            <div class="resultados">
-                <p class="txt-total"></p>
-                <p class="txt-imposto"></p>
-                <p class="txt-final"></p>
-            </div>
-            
-            <button class="btn-remover">Remover Produto</button>
-            <hr>
+            <p>Valor Total: R$ <span>${valorFinalTotal.toFixed(2)}</span></p>
+            <p>Valor do Produto (Unidade): R$ <span>${valorUnitario.toFixed(2)}</span></p>
+            <p>Valor do Imposto (Total): R$ <span>${(valorImpostoUnitario * quantidade).toFixed(2)}</span></p>
+            <p>Quantidade: <span>${quantidade}</span></p>
+            <p>Tipo: <span>${tipo}</span></p>
+            <button class="btn-rmv" onclick="removerProduto(${id})">Remover</button>
         `
-
-        const inputQuantidade = cardProduto.querySelector('.input-qtd')
-        const txtTotal = cardProduto.querySelector('.txt-total')
-        const txtImposto = cardProduto.querySelector('.txt-imposto')
-        const txtFinal = cardProduto.querySelector('.txt-final')
-        const btnRemover = cardProduto.querySelector('.btn-remover')
-
-        const atualizarValoresNaTela = () => {
-            const quantidadeAtual = Number(inputQuantidade.value)
-            const total = quantidadeAtual * valorUnitario
-            const valorDoImposto = total * calcularImposto(tipo)
-            const valorFinal = total + valorDoImposto
-
-            txtTotal.textContent = `Total Bruto: R$ ${total.toFixed(2)}`
-            txtImposto.textContent = `Imposto (Tipo ${tipo}): R$ ${valorDoImposto.toFixed(2)}`
-            txtFinal.textContent = `Valor Final: R$ ${valorFinal.toFixed(2)}`
-        }
-
-        atualizarValoresNaTela()
-        inputQuantidade.addEventListener('input', atualizarValoresNaTela)
-        btnRemover.addEventListener('click', () => removerProduto(id))
 
         containerVitrine.appendChild(cardProduto)
     })
@@ -85,10 +62,12 @@ const adicionarProduto = (evento) => {
     evento.preventDefault()
 
     const form = document.getElementById('form-produto')
-    const inputNome = document.getElementById('nome')
-    const inputCarac = document.getElementById('caracteristicas')
+    
+    // Capturando os dados pelos IDs que você já tinha no HTML
+    const inputNome = document.getElementById('produto')
+    const inputCarac = document.getElementById('descricao')
     const inputValor = document.getElementById('valor')
-    const inputUnidade = document.getElementById('unidade')
+    const inputQuantidade = document.getElementById('quantidade')
     const inputTipo = document.getElementById('tipo')
 
     const novoProduto = {
@@ -96,7 +75,7 @@ const adicionarProduto = (evento) => {
         nome: inputNome.value,
         caracteristicas: inputCarac.value,
         valorUnitario: Number(inputValor.value),
-        unidade: inputUnidade.value,
+        quantidade: Number(inputQuantidade.value),
         tipo: Number(inputTipo.value),
     }
 
@@ -104,8 +83,13 @@ const adicionarProduto = (evento) => {
     renderizarProdutos()
 
     form.reset()
-
     inputNome.focus()
+
+    // Bônus: Força a transição visual para a aba "exibição" logo após o cadastro
+    const cadastro = document.querySelector('.inserir-info-container')
+    const exibicao = document.querySelector('.exibir-produtos')
+    exibicao.classList.add('ativo')
+    cadastro.classList.remove('ativo')
 }
 
 const formProduto = document.getElementById('form-produto')

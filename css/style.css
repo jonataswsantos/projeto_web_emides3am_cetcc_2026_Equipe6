@@ -1,60 +1,6 @@
-*{
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-#geral  {
-    width: 600px;
-    min-height: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #94c4a9;    
-}
-
-h1{
-    text-align: center;
-    padding: 20px 0px;
-}
-
-#div-form, #div-lista{
-    padding: 5px 30px; 
-    margin: 20px 0px;
-    background-color: #bec1ce;
-}
-
-label, button{
-    display: block;
-    margin: 10px 0px;
-}
-
-input{
-    width: 450px;
-    padding: 10px;
-}
-
-button{
-    width: 450px;
-    height: 40px;
-    margin: 20px 0px;
-    cursor: pointer;
-    border:  none;
-}
-
-#div-lista{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    font-size:0.9em;
-}
-
-.dados-pessoa{
-    margin: 15px 0px;
-}
-
-
-
-
+@import './geral.css';
+@import './header.css';
+@import './main.css';
+@import './corpo.css';
+@import './footer.css'
 
