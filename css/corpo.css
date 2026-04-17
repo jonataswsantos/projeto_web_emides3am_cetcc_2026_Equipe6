@@ -6,6 +6,7 @@
 }
 
 .card {
+  cursor: pointer;
   display: flex;
   background: #fff;
   padding: 20px;
@@ -15,11 +16,16 @@
   gap: 20px;
   color: #012b89;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  transition: .3s;
 }
 
 .card-img img {
   width: 60px;
   height: 60px;
+}
+
+.card:hover{
+  background: #f7f7f7;
 }
 
 .inserir-dados-container {
