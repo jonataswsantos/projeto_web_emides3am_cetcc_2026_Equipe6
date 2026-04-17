@@ -51,7 +51,13 @@
   font-weight: bold;
 }
 
-.inserir-dados form {
+ input, textarea, select{
+  padding: 8px;
+  border: solid 1px rgb(202, 202, 202);
+  border-radius: 4px;
+}
+
+.form-flex{
   margin-top: 12px;
   border-radius: 4px;
   gap: 8px;
@@ -59,6 +65,11 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.form-flex div{
+  margin-top: 20px;
 }
 
 .btn-form {
