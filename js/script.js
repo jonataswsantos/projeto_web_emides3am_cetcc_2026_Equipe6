@@ -51,7 +51,7 @@ const renderizarProdutos = () => {
             <p>Valor do Imposto (Total): R$ <span>${(valorImpostoUnitario * quantidade).toFixed(2)}</span></p>
             <p>Quantidade: <span>${quantidade}</span></p>
             <p>Tipo: <span>${tipo}</span></p>
-            <button class="btn-rmv" onclick="removerProduto(${id})">Remover</button>
+            <button class="btn-form" onclick="removerProduto(${id})">Remover</button>
         `
 
         containerVitrine.appendChild(cardProduto)
