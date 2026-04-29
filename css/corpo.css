@@ -1,119 +1,145 @@
+/* --- Abas Superiores --- */
 .categorias {
   margin-top: 40px;
   display: flex;
-  justify-self: center;
+  justify-content: center; /* Centraliza os botões de aba */
   gap: 40px;
 }
 
 .card {
+  cursor: pointer;
   display: flex;
   background: #fff;
-  padding: 20px;
-  width: 320px;
-  border-radius: 4px;
+  padding: 20px 30px;
+  width: 280px;
+  border-radius: 8px; /* Bordas mais arredondadas */
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  text-align: center;
   color: #012b89;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra mais moderna e suave */
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.card-img img {
-  width: 60px;
-  height: 60px;
+.card:hover {
+  transform: translateY(-5px); /* Efeito flutuante ao passar o mouse */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
+/* --- Container Principal --- */
 .inserir-dados-container {
-  background: #fff;
   margin-top: 40px;
-  padding: 40px 80px;
+  padding: 0 20px 60px 20px; /* Reduzi o padding lateral para focar no centro */
 }
 
+/* --- Centralizando o Formulário --- */
 .inserir-info-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  margin: 0 120px;
-  gap: 20px;
   display: none;
+  justify-content: center; /* Mantém o formulário no meio da tela */
+}
+
+.inserir-info-container.ativo {
+  display: flex; 
+}
+
+/* --- O "Card" do Formulário --- */
+.inserir-dados {
+  width: 100%;
+  max-width: 600px; /* Limita a largura para não ficar esticado */
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Efeito de elevação */
 }
 
 .inserir-dados h2 {
   color: #13387d;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+}
+
+/* --- Estilo dos Inputs --- */
+.form-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .inserir-dados label {
   color: #1b2b41;
   font-weight: bold;
+  margin-top: 10px;
 }
 
-.inserir-dados form {
-  margin-top: 12px;
-  border-radius: 4px;
-  gap: 8px;
-  background: #eff1f5;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+input, textarea, select {
+  width: 100%;
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
+  padding: 12px;
+  border: 1px solid #ccd1d9;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f9fbfd;
+  transition: border 0.3s;
 }
 
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border: 1px solid #13387d; /* Destaque azul ao clicar */
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* --- Botão do Formulário --- */
 .btn-form {
   cursor: pointer;
-  display: inline-block;
-  margin-top: 10px;
-  text-decoration: none;
+  display: block;
+  width: 100%;
+  margin-top: 30px;
   color: #fff;
   font-weight: bold;
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-image: linear-gradient(to top, #05902c, #119e36);
-  border: navy;
+  font-size: 1.1rem;
+  padding: 14px;
+  border-radius: 6px;
+  background-image: linear-gradient(to right, #05902c, #119e36); /* Gradiente na horizontal */
+  border: none;
+  box-shadow: 0 4px 10px rgba(17, 158, 54, 0.3);
+  transition: opacity 0.3s;
 }
 
-.exibir-resultados {
-  color: #13387d;
-  margin-top: 12px;
-  border-radius: 4px;
-  gap: 8px;
-  background: #eff1f5;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+.btn-form:hover {
+  opacity: 0.85;
 }
 
-.exibir-produtos{
+/* --- Lista de Exibição --- */
+.exibir-produtos {
   display: none;
-  margin: 0 120px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Deixa os produtos em grade responsiva */
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto; /* Centraliza a lista de produtos */
+}
+
+.exibir-produtos.ativo {
+  display: grid;
 }
 
 .produto-simulado {
-  color: #13387d;
-  margin-top: 12px;
-  border-radius: 4px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  background: #eff1f5;
-  padding: 20px;
 }
 
-.produto-simulado p {
-  font-weight: initial;
-  color: #1b2b41;
-}
-.produto-simulado span {
-  font-weight: bold;
-}
-
-.btn-rmv {
-  cursor: pointer;
-  display: inline-block;
-  margin-top: 10px;
-  text-decoration: none;
-  color: #fff;
-  font-weight: bold;
-  padding: 4px 12px;
-  border-radius: 4px;
-  background-image: linear-gradient(to top, #8a2727, #cc4848);
-  border: navy;
-}
-
-.ativo{
-  display: grid;
+.produto-simulado h2 {
+  color: #13387d;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #f2f4f9;
+  padding-bottom: 10px;
 }

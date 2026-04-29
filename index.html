@@ -5,90 +5,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <title>Simulador de Impostos</title>
+    <title>Simulador de Impostos - Dashboard</title>
 </head>
 
 <body>
-    <header>
-        <nav class="nav">
-            <div class="nav-logo">
-                <img src="./img/bandeira-do-brasil-og.webp" alt="Bandeira do Brasil">
-                <div class="titulo">
-                    <span>Governo Federal</span>
-                    <p>Simulador de Impostos</p>
-                </div>
-            </div>
-            <div class="nav-links">
-                <ul>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="#">Sobre</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contato</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <section class="hero">
-            <div class="hero-info">
-                <h1>Simulador de Impostos</h1>
-                <p>Calculadora de Tributos Oficiais</p>
-                <p>Calcule impostos de produtos de forma rápida e simples.</p>
-                <a href="#" class="btn-hero">Iniciar Simulação</a>
-            </div>
-            <div class="hero-img">
-                <img src="./img/cidadeilustracao.png" alt="Ilustração de cidade">
-            </div>
-        </section>
-    </main>
-
     <section class="categorias">
         <div class="card" id="cadastro">
-            <div class="card-img">
-                <img src="img/icone1.jpg" alt="Produto">
-            </div>
             <div class="card-info">
-                <h3>Produto</h3>
-                <p>Faça a simulação do produto desejado</p>
+                <h3>Cadastrar Produto</h3>
+                <p>Faça a simulação de um novo item</p>
             </div>
         </div>
         <div class="card" id="exibicao">
-            <div class="card-img">
-                <img src="img/icone2.jpg" alt="Exibição">
-            </div>
             <div class="card-info">
-                <h3>Exibição</h3>
-                <p>Acesse os itens simulados</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-img">
-                <img src="img/icone3.jpg" alt="Outros">
-            </div>
-            <div class="card-info">
-                <h3>Outros</h3>
-                <p>Outras simulações disponíveis</p>
+                <h3>Lista de Produtos</h3>
+                <p>Veja todos os itens e seus impostos</p>
             </div>
         </div>
     </section>
 
     <section class="inserir-dados-container">
+        
         <div class="inserir-info-container ativo">
             <div class="inserir-dados">
-                <h2>Preencha os Dados</h2>
+                <h2>Preencha os Dados do Produto</h2>
                 <form id="form-produto">
-                    <label for="produto">Nome do Produto</label>
-                    <input type="text" id="produto" name="produto" required>
-                    <label for="descricao">Descrição do Produto</label>
-                    <textarea id="descricao" name="descricao" required></textarea>
-                    <div>
-                        <label for="valor">Valor Unitário</label>
+                    <div class="form-flex">
+                        <label for="produto">Nome do Produto</label>
+                        <input type="text" id="produto" name="produto" required>
+                        
+                        <label for="descricao">Descrição do Produto</label>
+                        <textarea id="descricao" name="descricao" rows="3" required></textarea>
+                        
+                        <label for="valor">Valor Unitário (R$)</label>
                         <input type="number" id="valor" name="valor" min="0" step="0.01" required>
+                        
                         <label for="quantidade">Quantidade</label>
                         <input type="number" id="quantidade" name="quantidade" min="1" required>
-                        <label for="tipo">Tipo do Produto</label>
+                        
+                        <label for="tipo">Tipo do Produto (Imposto)</label>
                         <select id="tipo" name="tipo" required>
+                            <option value="" disabled selected>Selecione uma opção...</option>
                             <option value="1">Tipo 1 - Isento</option>
                             <option value="2">Tipo 2 - 8%</option>
                             <option value="3">Tipo 3 - 10%</option>
@@ -99,90 +56,32 @@
                     <button type="submit" class="btn-form">Adicionar Produto</button>
                 </form>
             </div>
-            <div class="exibir-resultados">
-                <h2>Resultado da Simulação</h2>
-                <div class="valor-container">
-                    <p>Valor Estimado</p>
-                    <div>
-                        <p>R$</p>
-                        <h3>0,00</h3>
-                    </div>
-                </div>
-                <div class="derivados-container">
-                    <p>Valor do Produto: R$ <span>0,00</span></p>
-                    <p>Valor do Imposto: R$ <span>0,00</span></p>
-                    <p>Quantidade: <span>0</span></p>
-                </div>
-            </div>
         </div>
         
         <div class="exibir-produtos">
             </div>
+
     </section>
 
-    <footer>
-        <div class="footer-links">
-            <div>
-                <h3>Serviços</h3>
-                <ul>
-                    <li>Simular Impostos</li>
-                    <li>Cadastrar Produtos</li>
-                </ul>
-            </div>
-            <div>
-                <h3>Acesso Rápido</h3>
-                <ul>
-                    <li>Início</li>
-                    <li>Sobre</li>
-                    <li>FAQ</li>
-                </ul>
-            </div>
-            <div>
-                <h3>Sobre</h3>
-                <ul>
-                    <li>Legislação</li>
-                    <li>Termos de Uso</li>
-                    <li>Contato</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom-container">
-            <div class="footer-bottom">
-                <div class="footer-brand">
-                    <img src="img/bandeira-do-brasil-og.webp" alt="Bandeira do Brasil">
-                    <div>
-                        <span>Governo Federal</span>
-                        <p>Simulador de Impostos</p>
-                    </div>
-                </div>
-                <p>© Governo Federal. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        const cards = document.querySelectorAll('.card')
-        console.log(cards)
-        const cadastro = document.querySelector('.inserir-info-container')
-        const exibicao = document.querySelector('.exibir-produtos')
+        const cards = document.querySelectorAll('.card');
+        const cadastro = document.querySelector('.inserir-info-container');
+        const exibicao = document.querySelector('.exibir-produtos');
 
         cards.forEach(item => {
             item.addEventListener('click', () => {
-                const itemId = item.id
-                console.log(itemId)
+                const itemId = item.id;
                 if (itemId === 'cadastro') {
-                    cadastro.classList.add('ativo')
-                    exibicao.classList.remove('ativo')
+                    cadastro.classList.add('ativo');
+                    exibicao.classList.remove('ativo');
                 }
                 else if (itemId === 'exibicao') {
-                    exibicao.classList.add('ativo')
-                    cadastro.classList.remove('ativo')
+                    exibicao.classList.add('ativo');
+                    cadastro.classList.remove('ativo');
                 }
-            })
-        })
+            });
+        });
     </script>
-    
     <script src="./js/script.js"></script>
 </body>
-
 </html>
