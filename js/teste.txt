@@ -1,22 +1,53 @@
 const API_URL = "https://localhost:7223/api/produto";
 let produtosCadastrados = [];
 
-const renderizarProdutos = (listaDeProdutos) => {
+const calcularImposto = (tipoProduto) => {
+    const tipo = Number(tipoProduto);
+    switch (tipo) {
+        case 1: return 0;
+        case 2: return 0.08;
+        case 3: return 0.1;
+        case 4: return 0.12;
+        case 5: return 0.17;
+        default: return 0;
+    }
+}
+
+const renderizarProdutos = (listaDeProdutos, usandoApi) => {
     const containerVitrine = document.querySelector('.exibir-produtos');
     containerVitrine.innerHTML = '';
+
+    //Percorre a lista de produtos
     listaDeProdutos.forEach((produto) => {
+        // Variáveis para padronizar os dados, não importa de onde venham
         let id, nome, caracteristicas, valorUnitario, quantidade, tipo;
         let valorImpostoTotal, valorFinalTotal;
 
-        id = produto.Id;
-        nome = produto.Nome;
-         caracteristicas = produto.Descricao; 
-        valorUnitario = produto.ValorUnitario;
-        quantidade = produto.Quantidade;
-        tipo = produto.TipoImposto; 
-        valorImpostoTotal = produto.ValorDoImpostoTotal;
-        valorFinalTotal = produto.ValorFinal;
+        //Se os dados vieram da api, precisa marca-los exatamente igual aomo vieram no c#
+        if (usandoApi) {
+            id = produto.Id;
+            nome = produto.Nome;
+            caracteristicas = produto.Descricao; 
+            valorUnitario = produto.ValorUnitario;
+            quantidade = produto.Quantidade;
+            tipo = produto.TipoImposto; 
+            valorImpostoTotal = produto.ValorDoImpostoTotal;
+            valorFinalTotal = produto.ValorFinal;
+        }else {
+            id = produto.id;
+            nome = produto.nome;
+            caracteristicas = produto.caracteristicas;
+            valorUnitario = produto.valorUnitario;
+            quantidade = produto.quantidade;
+            tipo = produto.tipo;
+            // Fazemos a matemática localmente usando a sua função
+            const impostoPercentual = calcularImposto(tipo);
+            const valorImpostoUnitario = valorUnitario * impostoPercentual;
+            valorImpostoTotal = valorImpostoUnitario * quantidade;
+            valorFinalTotal = (valorUnitario + valorImpostoUnitario) * quantidade;
+        }
 
+        // Criando o card com as suas classes
         const cardProduto = document.createElement('div');
         cardProduto.classList.add('produto-simulado');
 
@@ -28,13 +59,14 @@ const renderizarProdutos = (listaDeProdutos) => {
             <p>Valor do Imposto (Total): R$ <span>${valorImpostoTotal}</span></p>
             <p>Quantidade: <span>${quantidade}</span></p>
             <p>Tipo: <span>${tipo}</span></p>
-            <button class="btn-form" onclick='prepararEdicao(${JSON.stringify(produto)})'>Editar</button>
+            <button class="btn-form" onclick="prepararEdicao(${JSON.stringify(produto)})">Editar</button>
             <button class="btn-form" onclick="removerProduto(${id})">Remover</button>
         `;
         containerVitrine.appendChild(cardProduto);
     });
 }
 
+//Função para atualizar a exibição dos livros, decidir se vai usar api ou armazenamento remoto
 const atualizarVitrine = async () => {
   try {
     const resposta = await fetch(API_URL, {
@@ -47,30 +79,45 @@ const atualizarVitrine = async () => {
     
     if (!resposta.ok) throw new Error("Erro na API");
     const produtosDaApi = await resposta.json();
-    renderizarProdutos(produtosDaApi);
+    //Se tudo der certo, ele renderiza com os dados da api
+    renderizarProdutos(produtosDaApi, true);
 
   } catch (erro) {
-    alert('API não conectada, sistema fora do ar.')
+    alert('api não conectada')
     console.error("Erro real detectado:", erro);
+    //Se der errado, ele rendriza com o armazenamento local
+    renderizarProdutos(produtosCadastrados, false);
   }
 }
 
+//Função de adicionar produto
 const adicionarProduto = async (evento) => {
     evento.preventDefault();
     const form = document.getElementById('form-produto');
-
+    
     const inputNome = document.getElementById('produto');
     const inputCarac = document.getElementById('descricao');
     const inputValor = document.getElementById('valor');
     const inputQuantidade = document.getElementById('quantidade');
     const inputTipo = document.getElementById('tipo');
 
+    // Prepara o pacote para a API (com os nomes que o C# espera)
     const pacoteParaApi = {
         nome: inputNome.value,
         descricao: inputCarac.value,
         valorUnitario: Number(inputValor.value),
         quantidade: Number(inputQuantidade.value),
         tipoImposto: Number(inputTipo.value)
+    };
+
+    // Prepara o pacote para o seu Modo Local
+    const pacoteLocal = {
+        id: Date.now(),
+        nome: inputNome.value,
+        caracteristicas: inputCarac.value,
+        valorUnitario: Number(inputValor.value),
+        quantidade: Number(inputQuantidade.value),
+        tipo: Number(inputTipo.value),
     };
 
     try {
@@ -83,9 +130,11 @@ const adicionarProduto = async (evento) => {
         
         if (!resposta.ok) throw new Error("API recusou o cadastro.");
     } catch (erro) {
-        console.error("Erro real detectado:", erro);
+        // Se falhou salva no array
+        produtosCadastrados = [...produtosCadastrados, pacoteLocal];
     }
     atualizarVitrine();
+
 
     form.reset();
     inputNome.focus();
@@ -105,21 +154,29 @@ const removerProduto = async (idProduto) => {
             method: 'DELETE',
             mode: 'cors'
         });
+
         if (!resposta.ok) throw new Error("Erro ao deletar na API");
-        alert("Produto removido com sucesso!");
+
+        console.log("Produto removido com sucesso!");
+        
+        // Atualiza a vitrine para sumir o card da tela
         atualizarVitrine();
 
     } catch (erro) {
         console.error("Erro ao remover:", erro);
+        // Fallback para o modo local caso a API falhe
+        produtosCadastrados = produtosCadastrados.filter(p => p.id !== idProduto);
+        atualizarVitrine();
     }
 }
+
+
 
 // Modifique sua função adicionarProduto para lidar com o "Salvar Edição"
 const salvarProduto = async (evento) => {
     evento.preventDefault();
-
-    // Captura os valores atuais do formulário
-    const pacoteDados = {
+    
+    const dados = {
         nome: document.getElementById('produto').value,
         descricao: document.getElementById('descricao').value,
         valorUnitario: Number(document.getElementById('valor').value),
@@ -129,59 +186,35 @@ const salvarProduto = async (evento) => {
 
     try {
         let url = API_URL;
-        let metodo = "POST";
+        let metodo = 'POST';
 
-        if (idSendoEditado !== null) {
-            metodo = "PUT";
+        // Se tiver um ID sendo editado, muda para PUT e aponta para o ID
+        if (idSendoEditado) {
             url = `${API_URL}/${idSendoEditado}`;
-            pacoteDados.id = idSendoEditado; // O C# exige o ID no corpo do JSON
+            metodo = 'PUT';
+            dados.id = idSendoEditado;
         }
 
         const resposta = await fetch(url, {
             method: metodo,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(pacoteDados)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
         });
 
-        if (!resposta.ok) throw new Error("Erro ao salvar o produto");
+        if (!resposta.ok) throw new Error("Erro na API");
 
-        alert(idSendoEditado ? "Produto atualizado com sucesso!" : "Produto cadastrado!");
-
-        idSendoEditado = null; // Muito importante resetar para o próximo não ser edição
-        document.getElementById('form-produto').reset();
+        idSendoEditado = null; // Reseta o estado de edição
         atualizarVitrine();
-
-        document.querySelector('.exibir-produtos').classList.add('ativo');
-        document.querySelector('.inserir-info-container').classList.remove('ativo');
+        document.getElementById('form-produto').reset();
 
     } catch (erro) {
-        console.error("Erro:", erro);
-        alert("Não foi possível salvar as alterações.");
+        console.error("Erro ao salvar:", erro);
     }
 }
 
-let idSendoEditado = null;
-
-const prepararEdicao = (produto) => {
-    idSendoEditado = produto.Id;
-
-    document.getElementById('produto').value = produto.Nome;
-    document.getElementById('descricao').value = produto.Descricao;
-    document.getElementById('valor').value = produto.ValorUnitario;
-    document.getElementById('quantidade').value = produto.Quantidade;
-    document.getElementById('tipo').value = produto.TipoImposto;
-
-    const cadastro = document.querySelector('.inserir-info-container');
-    const exibicao = document.querySelector('.exibir-produtos');
-    
-    cadastro.classList.add('ativo');
-    exibicao.classList.remove('ativo');
-
-    document.getElementById('produto').focus();
-}
-
-
+// Inicia os eventos
 const formProduto = document.getElementById('form-produto');
-formProduto.addEventListener('submit', salvarProduto);
+formProduto.addEventListener('submit', adicionarProduto);
 
+// Quando a página carregar, já tenta puxar os dados
 atualizarVitrine();
